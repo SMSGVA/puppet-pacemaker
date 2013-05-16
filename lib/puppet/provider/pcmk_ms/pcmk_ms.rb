@@ -56,6 +56,7 @@ Puppet::Type.type(:pcmk_ms).provide(:pcmk_ms, :parent => Puppet::Provider::Pacem
 
   def destroy
     debug 'Destroying resource %s' % resource[:name]
+    crm 'resource', 'stop', resource[:name]
     crm 'configure', 'delete', resource[:name]
   end
 
