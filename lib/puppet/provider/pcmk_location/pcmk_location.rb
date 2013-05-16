@@ -18,19 +18,31 @@ Puppet::Type.type(:pcmk_location).provide(:pcmk_location, :parent => Puppet::Pro
     REXML::XPath.each(xml, basepath) do |e| 
       name = e.attributes['id']
       resource = e.attributes['rsc'] 
-      score = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule").attributes['score']
-      attribute = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['attribute']
-      operation = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['operation']
-      value = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['value']
-
+      if REXML::XPath.first(xml, basepath + "[@id='#{name}']").attributes['score']
+        score = REXML::XPath.first(xml, basepath + "[@id='#{name}']").attributes['score']
+      else
+        score = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule").attributes['score']
+      end
       property = {
         :name => name,
         :resource => resource,
         :score => score,
-        :attribute => attribute,
-        :operation => operation,
-        :value => value,
       }
+      if REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule")
+        if REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['attribute']
+          attribute = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['attribute']
+          property[:attribute] = attribute
+        end
+        if REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['operation']
+          operation = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['operation']
+          property[:operation] = operation
+        end
+        if REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['value']
+          value = REXML::XPath.first(xml, basepath + "[@id='#{name}']/rule/expression").attributes['value']
+          property[:value] = value
+        end
+      end
+
       instances << new(property)
     end
     instances
@@ -55,9 +67,10 @@ Puppet::Type.type(:pcmk_location).provide(:pcmk_location, :parent => Puppet::Pro
     debug 'Building args for %s' % resource[:name]
     args = [
       resource[:resource],
-      'rule',
+#      'rule',
       "#{resource[:score]}:",
-      resource['attribute'],
+      resource['node'],
+#      resource['attribute'],
       resource['operation'],
       resource['value']
     ]
