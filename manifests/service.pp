@@ -30,7 +30,7 @@ class pacemaker::service (
   exec { 'pcmk-stack-restart':
     #command     => "service pacemaker stop && service ${transport} restart && service pacemaker start",
     command => "service corosync restart",
-    path    => ['/bin', '/sbin'],
+    path    => ['/bin', '/sbin', '/usr/sbin'],
     onlyif  => "/usr/bin/test ! -e /var/run/pacemaker.pid",
   } 
 }
