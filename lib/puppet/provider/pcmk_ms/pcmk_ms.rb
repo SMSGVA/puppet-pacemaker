@@ -19,13 +19,27 @@ Puppet::Type.type(:pcmk_ms).provide(:pcmk_ms, :parent => Puppet::Provider::Pacem
     REXML::XPath.each(xml, basepath) do |e|
       name = e.attributes['id']
       resource = REXML::XPath.first(xml, basepath + "[@id='#{name}']/primitive").attributes['id']
-      master_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-master-max']").attributes['value']
-      master_node_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-master-node-max']").attributes['value']
-      clone_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-clone-max']").attributes['value']
-      clone_node_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-clone-node-max']").attributes['value']
-      notification = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-notify']").attributes['value']
-      globally_unique = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-globally-unique']").attributes['value']
-      target_role = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-target-role']").attributes['value']
+      if master_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-master-max']")
+        master_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-master-max']").attributes['value']
+      end
+      if master_node_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-master-node-max']")
+        master_node_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-master-node-max']").attributes['value']
+      end
+      if clone_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-clone-max']")
+        clone_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-clone-max']").attributes['value']
+      end
+      if clone_node_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-clone-node-max']")
+        clone_node_max = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-clone-node-max']").attributes['value']
+      end
+      if notification = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-notify']")
+        notification = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-notify']").attributes['value']
+      end
+      if globally_unique = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-globally-unique']")
+        globally_unique = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-globally-unique']").attributes['value']
+      end
+      if target_role = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-target-role']")
+        target_role = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-target-role']").attributes['value']
+      end
       if REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-is-managed']")
         manage = REXML::XPath.first(xml, basepath + "[@id='#{name}']/meta_attributes/nvpair[@id='#{name}-meta_attributes-is-managed']").attributes['value']
       else
