@@ -1,4 +1,4 @@
-require 'puppet/provider/pacemaker'
+require File.dirname(__FILE__) + '/../../../puppet/provider/pacemaker.rb'
 require 'rexml/document'
 
 Puppet::Type.type(:pcmk_generic_daemon).provide(:pcmk_generic_daemon, :parent => Puppet::Provider::Pacemaker) do
