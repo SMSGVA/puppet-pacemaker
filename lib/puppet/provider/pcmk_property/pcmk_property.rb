@@ -8,9 +8,13 @@ Puppet::Type.type(:pcmk_property).provide(:pcmk_property, :parent => Puppet::Pro
 
   mk_resource_methods
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
    
     REXML::XPath.each(xml, "//cib/configuration/crm_config/cluster_property_set/nvpair") do |element|

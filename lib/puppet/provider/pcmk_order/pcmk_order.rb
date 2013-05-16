@@ -6,9 +6,13 @@ Puppet::Type.type(:pcmk_order).provide(:pcmk_order, :parent => Puppet::Provider:
 
   optional_commands :crm => '/usr/sbin/crm'
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
 
     REXML::XPath.each(xml, '//cib/configuration/constraints/rsc_order') do |e|

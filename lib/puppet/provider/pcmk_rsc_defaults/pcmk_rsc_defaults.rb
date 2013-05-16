@@ -8,9 +8,13 @@ Puppet::Type.type(:pcmk_rsc_defaults).provide(:pcmk_rsc_defaults, :parent => Pup
 
   mk_resource_methods
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
 
     REXML::XPath.each(xml, "//cib/configuration/rsc_defaults/meta_attributes/nvpair") do |element|

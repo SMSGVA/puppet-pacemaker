@@ -9,9 +9,13 @@ Puppet::Type.type(:pcmk_generic_daemon).provide(:pcmk_generic_daemon, :parent =>
     :crm_resource => '/usr/sbin/crm_resource'
   })
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
     basepath = "//cib/configuration/resources/primitive[@type='generic-daemon']"
 

@@ -6,9 +6,13 @@ Puppet::Type.type(:pcmk_location).provide(:pcmk_location, :parent => Puppet::Pro
 
   optional_commands :crm => '/usr/sbin/crm'
   
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
     basepath = "//cib/configuration/constraints/rsc_location"
     REXML::XPath.each(xml, basepath) do |e| 

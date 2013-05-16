@@ -9,9 +9,13 @@ Puppet::Type.type(:pcmk_prm).provide(:pcmk_prm, :parent => Puppet::Provider::Pac
     :crm_resource => '/usr/sbin/crm_resource'
   })
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
     basepath = ["//cib/configuration/resources/primitive[@type='mysql']", "//cib/configuration/resources/master/primitive[@type='mysql']", "//cib/configuration/resources/clone/primitive[@type='mysql']"]
     basepath.each do |path|

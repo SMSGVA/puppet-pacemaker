@@ -6,9 +6,13 @@ Puppet::Type.type(:pcmk_ms).provide(:pcmk_ms, :parent => Puppet::Provider::Pacem
 
   optional_commands :crm => '/usr/sbin/crm'
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
 
     basepath = "//cib/configuration/resources/master"

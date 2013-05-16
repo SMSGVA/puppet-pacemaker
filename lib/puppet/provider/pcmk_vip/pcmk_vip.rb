@@ -10,9 +10,13 @@ Puppet::Type.type(:pcmk_vip).provide(:pcmk_vip, :parent => Puppet::Provider::Pac
     :crm_resource => '/usr/sbin/crm_resource'
   })
 
-  def self.instances
+  def self.instances(res_name)
     instances = []
-    cmd = crm 'configure', 'show', 'xml'
+    if res_name
+      cmd = crm 'configure', 'show', 'xml', res_name
+    else
+      cmd = crm 'configure', 'show', 'xml'
+    end
     xml = REXML::Document.new(cmd)
     basepath = ["//cib/configuration/resources/primitive[@type='IPaddr2']", "//cib/configuration/resources/master/primitive[@type='IPaddr2']", "//cib/configuration/resources/clone/primitive[@type='IPaddr2']"]
     basepath.each do |path|
