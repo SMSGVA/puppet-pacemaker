@@ -50,11 +50,6 @@ class pacemaker (
     additional_agents => $additional_agents
   }
   ->
-  class { "${module_name}::service":
-    service   => $service,
-    transport => $transport,
-  }
-  ->
   class { "${module_name}::properties":
     default_action_timeout => $default_action_timeout,
     quorum                 => $quorum,
